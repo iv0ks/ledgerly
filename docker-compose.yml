@@ -33,7 +33,7 @@ services:
       - 'traefik.http.routers.dashboard.entrypoints=websecure'
       - 'traefik.http.routers.dashboard.tls=true'
 
-  # Lab's database. The app waits for this to be *healthy* (not just started) before it migrates and seeds, 
+  # Lab's database. The app waits for this to be *healthy* (not just started) before it migrates and seeds,
   # so there is no startup race: `docker compose up -d` brings the whole lab up in one command.
   postgres:
     image: postgres:16-alpine
