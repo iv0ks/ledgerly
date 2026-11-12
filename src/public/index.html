@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ledgerly — Invoicing</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <img src="/favicon.svg" alt="" class="brand__mark" width="28" height="28" />
+        <span class="brand__name">Ledgerly</span>
+        <span class="brand__tag">invoicing</span>
+      </div>
+      <div class="session" id="session">
+        <span id="whoami" class="whoami"></span>
+        <button id="logout" class="btn btn--ghost" hidden>Sign out</button>
+      </div>
+    </header>
+
+    <main class="shell">
+      <!-- Login card -->
+      <section id="login-view" class="card login">
+        <h1 class="login__title">Sign in to Ledgerly</h1>
+        <p class="login__sub">Use your account to view your invoices.</p>
+        <form id="login-form" class="form">
+          <label class="field">
+            <span>Username</span>
+            <input name="username" autocomplete="username" required />
+          </label>
+          <label class="field">
+            <span>Password</span>
+            <input name="password" type="password" autocomplete="current-password" required />
+          </label>
+          <button class="btn btn--primary" type="submit">Sign in</button>
+          <p id="login-error" class="error" hidden></p>
+        </form>
+      </section>
+
+      <!-- Dashboard -->
+      <section id="dash-view" class="dash" hidden>
+        <div class="dash__head">
+          <h1>Your invoices</h1>
+          <p class="muted">Every invoice issued under your account.</p>
+        </div>
+
+        <div class="grid">
+          <section class="card">
+            <h2 class="card__title">Invoices</h2>
+            <table class="table" id="invoice-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Number</th>
+                  <th>Client</th>
+                  <th class="num">Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="invoice-rows"></tbody>
+            </table>
+          </section>
+
+          <section class="card">
+            <h2 class="card__title">Invoice viewer</h2>
+            <p class="muted">Open an invoice by its id.</p>
+            <form id="view-form" class="viewer">
+              <input id="view-id" type="number" min="1" placeholder="e.g. 1" required />
+              <button class="btn btn--primary" type="submit">Open</button>
+            </form>
+            <pre id="view-out" class="out" hidden></pre>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span>Ledgerly</span> · internal billing console · demo environment
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
