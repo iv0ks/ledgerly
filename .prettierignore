@@ -1,0 +1,8 @@
+dist/
+node_modules/
+drizzle/
+pnpm-lock.yaml
+CHANGELOG.md
+# Documentation uses a hand-crafted layout (badges, centred tables, GitHub
+# callouts) that Prettier would reflow — keep it out of the formatter.
+*.md

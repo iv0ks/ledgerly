@@ -1,0 +1,28 @@
+# Node
+node_modules/
+dist/
+*.log
+.npm/
+.pnpm-store/
+
+# TypeScript / build caches
+*.tsbuildinfo
+
+# Drizzle generated SQL migrations are committed; local meta journals are not needed to ignore,
+# but drizzle-kit temp output is:
+drizzle/.cache/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+
+# The challenge flag is baked into the Docker image at build time and seeded
+# into the victim's invoice. It must NOT live in the repo, or it would spoil
+# the lab.
+/flag.txt
+
+# Local secrets:
+#  - Postgres credentials / app session secret for local runs.
+#  - Namecheap API credentials for Traefik's ACME DNS-01 challenge.
+.env

@@ -1,0 +1,53 @@
+{
+  "name": "ledgerly",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Intentionally vulnerable invoicing app to practice IDOR / broken access control (CWE-639).",
+  "type": "module",
+  "license": "MIT",
+  "author": "iv0ks",
+  "packageManager": "pnpm@9.12.3",
+  "engines": {
+    "node": ">=24"
+  },
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "lint": "eslint . && prettier --check .",
+    "lint:fix": "eslint . --fix && prettier --write .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:seed": "tsx src/db/seed.ts",
+    "db:setup": "pnpm db:migrate && pnpm db:seed",
+    "prepare": "husky || true"
+  },
+  "dependencies": {
+    "cookie-signature": "1.2.2",
+    "drizzle-orm": "0.36.4",
+    "express": "4.21.2",
+    "express-session": "1.18.1",
+    "postgres": "3.4.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.6.0",
+    "@commitlint/config-conventional": "19.6.0",
+    "@eslint/js": "9.16.0",
+    "@types/express": "4.17.21",
+    "@types/express-session": "1.18.0",
+    "@types/node": "22.10.1",
+    "@types/supertest": "6.0.2",
+    "drizzle-kit": "0.28.1",
+    "eslint": "9.16.0",
+    "husky": "9.1.7",
+    "prettier": "3.4.1",
+    "supertest": "7.0.0",
+    "tsx": "4.19.2",
+    "typescript": "5.7.2",
+    "typescript-eslint": "8.17.0",
+    "vitest": "2.1.6"
+  }
+}
