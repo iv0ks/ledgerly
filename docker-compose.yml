@@ -1,0 +1,111 @@
+services:
+  # ---------------------------------------------------------------------------
+  # Postgres 16 — the lab's database. The app waits for this to be *healthy*
+  # (not just started) before it migrates and seeds, so there is no startup
+  # race: `docker compose up -d` brings the whole lab up in one command.
+  # ---------------------------------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    container_name: ledgerly-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ledgerly}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ledgerly}
+      POSTGRES_DB: ${POSTGRES_DB:-ledgerly}
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      # pg_isready returns 0 only once Postgres is accepting connections.
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-ledgerly} -d ${POSTGRES_DB:-ledgerly}']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - ledgerly-db-data:/var/lib/postgresql/data
+    networks:
+      - iv0ks-dev
+
+  # ---------------------------------------------------------------------------
+  # ledgerly — the intentionally vulnerable invoicing API (IDOR / CWE-639).
+  # Published directly on port 3000. The entrypoint migrates + seeds, then
+  # starts the server.
+  # ---------------------------------------------------------------------------
+  ledgerly:
+    image: ghcr.io/iv0ks/ledgerly:latest
+    build:
+      context: .
+      args:
+        # Override at build time with: docker compose build --build-arg FLAG=...
+        FLAG: ${FLAG:-FLAG{LEDGERLY_BALANCE_EXPOSED}}
+    container_name: ledgerly
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-ledgerly}:${POSTGRES_PASSWORD:-ledgerly}@db:5432/${POSTGRES_DB:-ledgerly}
+      SESSION_SECRET: ${SESSION_SECRET:-dev-only-change-me}
+      FLAG: ${FLAG:-FLAG{LEDGERLY_BALANCE_EXPOSED}}
+      PORT: '3000'
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - '3000:3000'
+    networks:
+      - iv0ks-dev
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.ledgerly.rule=Host(`ledgerly.iv0ks.dev`)'
+      - 'traefik.http.routers.ledgerly.entrypoints=websecure'
+      - 'traefik.http.routers.ledgerly.tls=true'
+      - 'traefik.http.routers.ledgerly.tls.certresolver=namecheap'
+      - 'traefik.http.services.ledgerly.loadbalancer.server.port=3000'
+
+  # ---------------------------------------------------------------------------
+  # Traefik — optional reverse proxy for HTTPS + hostname access (Option B).
+  # ---------------------------------------------------------------------------
+  traefik:
+    image: 'traefik:v3.7.14'
+    container_name: 'ledgerly-traefik'
+    security_opt:
+      - 'no-new-privileges:true'
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ${ROOT_PATH:-.}/tools/traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - iv0ks-dev
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.dashboard.tls.certresolver=namecheap'
+      - 'traefik.http.routers.dashboard.tls.domains[0].main=*.iv0ks.dev'
+      - 'traefik.http.routers.dashboard.tls.domains[0].sans=iv0ks.dev'
+      - 'traefik.http.routers.dashboard.service=api@internal'
+      - 'traefik.http.routers.dashboard.rule=Host(`traefik.iv0ks.dev`)'
+      - 'traefik.http.routers.dashboard.entrypoints=websecure'
+      - 'traefik.http.routers.dashboard.tls=true'
+
+volumes:
+  ledgerly-db-data:
+
+# This network must be created once with `docker network create iv0ks-dev`
+# before bringing the stack up.
+networks:
+  iv0ks-dev:
+    external: true

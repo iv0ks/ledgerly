@@ -1,0 +1,17 @@
+http:
+  # Entry points define how Traefik listens for incoming requests.
+  routers:
+    # Ledgerly router.
+    ledgerly:
+      rule: 'Host(`ledgerly.iv0ks.dev`)'
+      entryPoints:
+        - websecure
+      service: ledgerly
+      tls: { certResolver: namecheap }
+
+  # Services define how Traefik forwards requests to backend servers.
+  services:
+    ledgerly:
+      loadBalancer:
+        servers:
+          - url: 'http://host.docker.internal:3000/'

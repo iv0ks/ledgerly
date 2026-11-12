@@ -1,0 +1,57 @@
+# GLOBAL: Basic engine settings.
+# Configures how Traefik behaves as a software (updates and metrics).
+global:
+  checkNewVersion: true # Periodically checks if there is a newer version of Traefik available.
+  sendAnonymousUsage: true # Sends anonymous usage statistics to help improve Traefik.
+
+# LOG: Internal events of Traefik.
+# Configures what information Traefik writes to the console about its own operation.
+log:
+  level: INFO # INFO shows significant events and startup confirmation.
+
+# API & DASHBOARD: The management interface.
+# Controls the "brain" and the visual representation of Traefik.
+api:
+  dashboard: true # Allows access to the dashboard via port 8080 without a password (local use).
+  insecure: false # Only enable the dashboard on the secure entrypoint with proper TLS.
+
+# ENTRYPOINTS: The "front doors" of your server.
+# Defines which network ports Traefik will listen to for incoming traffic.
+entryPoints:
+  web:
+    address: ':80'
+    http:
+      # Drop request headers whose names use aliasing characters (e.g. X_Auth_User / X.Auth.User for X-Auth-User).
+      aliasHeadersStrategy: delete
+      # GLOBAL REDIRECT: Send all HTTP traffic to HTTPS.
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ':443' # Listening on port 443 for encrypted traffic.
+    http:
+      aliasHeadersStrategy: delete # Same header-alias hardening as 'web'.
+
+# PROVIDERS: Traefik's information sources.
+# Tells Traefik where to look for applications that need to be published.
+providers:
+  file:
+    filename: '/etc/traefik/dynamic.yml'
+  docker:
+    endpoint: 'unix:///var/run/docker.sock' # The communication channel with the Docker engine.
+    exposedByDefault: false # Traefik will ignore all containers unless they have the 'traefik.enable=true' label.
+
+certificatesResolvers:
+  namecheap:
+    acme:
+      email: domains@iv0ks.dev # Email for ACME registration and recovery contact.
+      storage: /etc/traefik/certs/acme.json # File to store certificates.
+      dnsChallenge:
+        provider: namecheap # Use the Namecheap API (via lego) to solve the DNS-01 challenge.
+        # Namecheap's DNS can be slow to propagate; give lego time and use
+        # public resolvers for the propagation pre-check instead of Docker's
+        # internal resolver.
+        resolvers:
+          - '1.1.1.1:53'
+          - '8.8.8.8:53'

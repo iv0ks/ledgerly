@@ -1,0 +1,3 @@
+# Ignore Traefik's ACME storage file, which contains sensitive information such as private keys and should not be committed to version control.
+certs/acme.json
+certs/acme.json.*.bak
