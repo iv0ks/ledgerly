@@ -6,16 +6,14 @@ updates:
   # Node / npm updates.
   - package-ecosystem: 'npm'
     directories: ['/']
+    # One grouped PR for everything — including majors. This lab tracks the
+    # latest versions of the whole stack on purpose, so there is no reason to
+    # split majors into separate PRs (that only produced noise). Grouping keeps
+    # it to a single, reviewable PR per cycle.
     groups:
-      minor-and-patch:
+      all-dependencies:
         patterns: ['*']
-        update-types: ['minor', 'patch']
-    ignore:
-      # express 5 is a breaking major; this lab targets express 4 on purpose.
-      - dependency-name: 'express'
-        update-types: ['version-update:semver-major']
-      - dependency-name: '@types/express'
-        update-types: ['version-update:semver-major']
+        update-types: ['major', 'minor', 'patch']
     open-pull-requests-limit: 10
     schedule:
       interval: 'daily'
