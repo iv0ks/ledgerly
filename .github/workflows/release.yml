@@ -1,0 +1,25 @@
+# Release Workflow.
+name: Release
+
+# Define the event that triggers the workflow.
+# Run on push to the main branch of the repository and execute the release-please workflow.
+on:
+  push:
+    branches:
+      - main
+
+# Define permissions for the workflow.
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+# Define the jobs that run in the workflow.
+jobs:
+  # Job-1: Create releases or prs using release-please reusable workflow.
+  release:
+    name: SemVer
+    uses: iv0ks/cicd-hub/.github/workflows/release-please.yml@main
+    secrets:
+      APP_ID: ${{ secrets.APP_ID }}
+      APP_SECRET: ${{ secrets.APP_SECRET }}

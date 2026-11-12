@@ -1,0 +1,24 @@
+# Scheduled security scan.
+
+# Runs the vulnerability scan against the default branch on a schedule to catch CVEs that were disclosed *after* a dependency was merged (something the PR
+# gates cannot see). Complements Dependabot, which bumps versions but does not fail on newly vulnerable pinned dependencies.
+name: Security
+
+# Define the events that trigger the workflow.
+on:
+  schedule:
+    # Every Monday at 06:00 UTC.
+    - cron: '0 6 * * 1'
+  # Allow running it manually from the Actions tab.
+  workflow_dispatch:
+
+# Least-privilege: the called workflow only needs to read the repository.
+permissions:
+  contents: read
+
+# Define the jobs that run in the workflow.
+jobs:
+  # Job-1: Scan dependencies and IaC on the default branch for known CVEs.
+  vuln:
+    name: Vulnerabilities
+    uses: iv0ks/cicd-hub/.github/workflows/vuln-scan.yml@main
