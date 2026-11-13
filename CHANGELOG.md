@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.1](https://github.com/iv0ks/ledgerly/compare/v1.0.0...v1.0.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* **deps:** bump express to 4.22.3 to patch transitive cves ([5a730bd](https://github.com/iv0ks/ledgerly/commit/5a730bd846fada2dd6714cf03c88e7a80976a0d4))
+
+
+### Build System
+
+* **deps-dev:** bump @types/node from 22.10.1 to 26.6.6 ([#3](https://github.com/iv0ks/ledgerly/issues/3)) ([9a0bee9](https://github.com/iv0ks/ledgerly/commit/9a0bee9ce92cf1076243b216ad40a20cba253247))
+* **deps:** bump the minor-and-patch group across 1 directory with 9 updates ([#2](https://github.com/iv0ks/ledgerly/issues/2)) ([572298d](https://github.com/iv0ks/ledgerly/commit/572298d3b08dc24782963c300aa1b71d728befac))
+* **deps:** upgrade the whole stack to latest ([b9e39b4](https://github.com/iv0ks/ledgerly/commit/b9e39b45e199fc7bb6aff6f2cd119d3d8be08aa2))
+
 ## [1.0.0](https://github.com/iv0ks/ledgerly/compare/v1.0.0...v1.0.0) (2026-11-12)
 
 
