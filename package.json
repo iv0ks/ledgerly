@@ -1,6 +1,6 @@
 {
   "name": "ledgerly",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Intentionally vulnerable invoicing app to practice IDOR / broken access control (CWE-639).",
   "type": "module",
