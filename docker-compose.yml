@@ -60,7 +60,11 @@ services:
   # Ledgerly — the intentionally vulnerable invoicing API (IDOR / CWE-639).
   # The entrypoint migrates + seeds, then starts the server.
   ledgerly:
-    image: ghcr.io/iv0ks/ledgerly:v1.0.0
+    image: ghcr.io/iv0ks/ledgerly:v1.0.1
+    build:
+      context: .
+      args:
+        FLAG: ${FLAG:-FLAG{LEDGERLY_BALANCE_EXPOSED}}
     container_name: ledgerly
     restart: unless-stopped
     depends_on:

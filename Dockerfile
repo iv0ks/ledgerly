@@ -1,6 +1,6 @@
 # Single source of truth for the Node version used by all stages.
-# Node 24 is the current LTS ("Krypton").
-ARG NODE_VERSION=24
+# Node 26 "Lithium" — Active LTS since 2026-10-28.
+ARG NODE_VERSION=26
 
 ######################################################################################################
 #############################                  STAGE 1: BUILD                   ######################
@@ -11,14 +11,18 @@ FROM node:${NODE_VERSION}-slim AS builder
 # Apply available OS security patches before building.
 RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 
-# Enable the pinned pnpm via corepack (declared in package.json "packageManager").
-RUN corepack enable
+# node:26-slim no longer ships corepack, so install the pinned pnpm directly.
+RUN npm install -g pnpm@12.3.4
 
 WORKDIR /build
 
 # Install dependencies first (better layer caching). Copy only manifests.
+# --ignore-scripts: the production image needs no package build scripts (esbuild
+# postinstall is only used by dev tooling like vitest/drizzle-kit, which are
+# pruned out below). tsc builds fine without them, and skipping scripts avoids
+# pnpm's interactive build-approval gate in CI.
 COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --frozen-lockfile || pnpm install
+RUN pnpm install --frozen-lockfile --ignore-scripts || pnpm install --ignore-scripts
 
 # Copy the sources and build.
 COPY tsconfig.json tsconfig.build.json ./
@@ -31,7 +35,7 @@ RUN pnpm build \
     && cp -r src/public dist/public
 
 # Produce a production-only dependency tree for the runtime stage.
-RUN pnpm prune --prod
+RUN pnpm prune --prod --ignore-scripts
 
 ######################################################################################################
 #############################                  STAGE 2: RUNTIME                 ######################
