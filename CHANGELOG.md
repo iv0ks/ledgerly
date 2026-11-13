@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/iv0ks/ledgerly/compare/v1.0.1...v1.0.2) (2026-11-13)
+
+
+### Build System
+
+* align to node 26 (lithium) lts ([ec35ed4](https://github.com/iv0ks/ledgerly/commit/ec35ed496e6f8a72047c6ed69e0e8ff17eb8add6))
+
 ## [1.0.1](https://github.com/iv0ks/ledgerly/compare/v1.0.0...v1.0.1) (2026-11-13)
 
 
