@@ -30,7 +30,7 @@
     "drizzle-orm": "0.45.4",
     "express": "4.22.3",
     "express-session": "1.19.0",
-    "postgres": "3.4.5"
+    "postgres": "4.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "19.6.0",
