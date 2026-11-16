@@ -46,6 +46,13 @@ FROM node:${NODE_VERSION}-slim AS runtime
 # Apply OS security patches on top of the base image.
 RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 
+# Drop the bundled npm (and npx) from the base image. The app is installed with
+# pnpm at build time and started with `node dist/main.js`, so npm is never used
+# at runtime — but its own dependencies (undici, brace-expansion, …) carry
+# fixable CVEs that would otherwise fail the Trivy image gate. Removing it also
+# shrinks the attack surface.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
+
 # Non-root user to run the app.
 RUN useradd --create-home --uid 10001 appuser
 
