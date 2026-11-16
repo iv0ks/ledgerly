@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/iv0ks/ledgerly/compare/v1.0.2...v1.0.3) (2026-11-16)
+
+
+### Bug Fixes
+
+* remove bundled npm from the runtime image ([1cc7b18](https://github.com/iv0ks/ledgerly/commit/1cc7b182604c099c8faf29c71f5ea87f3efe221b))
+
 ## [1.0.2](https://github.com/iv0ks/ledgerly/compare/v1.0.1...v1.0.2) (2026-11-13)
 
 
