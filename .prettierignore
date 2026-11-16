@@ -3,6 +3,9 @@ node_modules/
 drizzle/
 pnpm-lock.yaml
 CHANGELOG.md
+# Traefik's ACME store is a root-owned, auto-generated certificate file; it is
+# gitignored and must never be read or reformatted by Prettier.
+tools/traefik/certs/
 # Documentation uses a hand-crafted layout (badges, centred tables, GitHub
 # callouts) that Prettier would reflow — keep it out of the formatter.
 *.md
